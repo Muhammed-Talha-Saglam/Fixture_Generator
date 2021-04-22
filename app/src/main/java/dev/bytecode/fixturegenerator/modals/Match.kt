@@ -1,10 +1,8 @@
 package dev.bytecode.fixturegenerator.modals
 
-import androidx.room.Entity
 
+data class Match  (
+    val home: String? = null,
 
-@Entity
-data class Match(
-    val home: String?,
-    val away: String?
+    val away: String? = null
     )
