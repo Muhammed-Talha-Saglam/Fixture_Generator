@@ -24,11 +24,15 @@ interface FixtureDao {
     fun getTeams(): Flow<List<Team>>
 
     @Query("DELETE FROM fixture")
-    suspend fun clearDatabase()
+    suspend fun clearFixture()
+
+    @Query("DELETE FROM team")
+    suspend fun clearTeams()
+
 
     @Transaction
     suspend fun updateFixture(fixtures: List<Fixture>) {
-        clearDatabase()
+        clearFixture()
 
         fixtures.forEach {
             insertFixture(it)

@@ -10,13 +10,19 @@ class FixtureRepository(private val fixtureDao: FixtureDao) {
         fixtureDao.insertFixture(fixture)
     }
 
-    suspend fun clearDatabase() {
-        fixtureDao.clearDatabase()
+    suspend fun clearFixture() {
+        fixtureDao.clearFixture()
+    }
+
+    suspend fun clearTeams() {
+        fixtureDao.clearTeams()
     }
 
     suspend fun updateDatabase(fixtures: List<Fixture>){
         fixtureDao.updateFixture(fixtures)
     }
+
+    val teamList: Flow<List<Team>> =  fixtureDao.getTeams()
 
     val fixtures = fixtureDao.getFixture()
 
@@ -24,7 +30,6 @@ class FixtureRepository(private val fixtureDao: FixtureDao) {
 //        return fixtureDao.getFixture()
 //    }
 
-    val teamList: Flow<List<Team>> =  fixtureDao.getTeams()
 
 
     suspend fun addTeam(team: Team) {

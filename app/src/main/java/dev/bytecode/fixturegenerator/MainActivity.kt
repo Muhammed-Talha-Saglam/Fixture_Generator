@@ -6,12 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModel
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModelFactory
 import dev.bytecode.fixturegenerator.ui.theme.FixtureGeneratorTheme
+import dev.bytecode.fixturegenerator.views.pages.HomePage
 
 class MainActivity : ComponentActivity() {
 
@@ -26,14 +24,11 @@ class MainActivity : ComponentActivity() {
             FixtureGeneratorTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                    HomePage(viewModel)
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
 
-}

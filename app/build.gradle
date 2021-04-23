@@ -63,6 +63,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
+    implementation "androidx.navigation:navigation-compose:1.0.0-alpha10"
+
+
+
     // Room components
     def room_version = '2.3.0'
     implementation "androidx.room:room-ktx:$room_version"
