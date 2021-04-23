@@ -1,5 +1,11 @@
 package dev.bytecode.fixturegenerator.modals
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 
-data class Team(val name: String)
+@Entity(tableName = "team")
+data class Team(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    val name: String)
