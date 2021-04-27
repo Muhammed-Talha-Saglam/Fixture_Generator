@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -30,7 +31,7 @@ fun MakeBottomNavBar(
 
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+    val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
 
 
     Row(
@@ -38,7 +39,7 @@ fun MakeBottomNavBar(
             .height(70.dp)
             .fillMaxWidth()
             .background(
-                color = Color.White,
+                color = MaterialTheme.colors.primary,
                 shape = RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp),
             )
             .border(
@@ -46,8 +47,9 @@ fun MakeBottomNavBar(
                 color = Color.Black,
                 shape = RoundedCornerShape(topStart = 35.dp, topEnd = 35.dp)
             )
-            .padding(horizontal = 30.dp, vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(horizontal = 30.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         pages.forEach { screen ->
 
@@ -64,10 +66,9 @@ fun MakeBottomNavBar(
             Box(
                 modifier = Modifier
                     .background(
-                        color = if (isSelected) Color.Black else Color.White,
+                        color = if (isSelected) Color.White else Color.Transparent,
                         shape = CircleShape
                     )
-                    .padding(10.dp)
                     .clickable(
                         onClick = {
 
@@ -89,9 +90,11 @@ fun MakeBottomNavBar(
                     logo,
                     contentDescription = "logo",
                     modifier = Modifier
+                        .padding(5.dp)
                         .size(30.dp)
                         .align(Alignment.Center),
-                    tint = if (isSelected) Color.White else Color.Black
+
+                    tint = if (isSelected) Color.Black else Color.White
                 )
             }
 

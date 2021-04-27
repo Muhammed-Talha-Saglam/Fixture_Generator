@@ -1,7 +1,11 @@
 package dev.bytecode.fixturegenerator.views.pages
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,11 +23,14 @@ val pages = listOf(
     Page.Fixture
 )
 
+@ExperimentalMaterialApi
+@ExperimentalComposeUiApi
 @Composable
 fun HomePage(viewModel: DatabaseViewModel) {
 
 
     val navController = rememberNavController()
+
 
 
     Scaffold(

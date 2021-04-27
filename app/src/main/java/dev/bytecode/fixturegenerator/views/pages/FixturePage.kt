@@ -1,12 +1,12 @@
 package dev.bytecode.fixturegenerator.views.pages
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -55,12 +55,12 @@ fun FixturePage(viewModel: DatabaseViewModel) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-
         Button(
             onClick = { viewModel.generateNewFixture() },
         ) {
             Text(text = "New Fixture")
         }
+
 
     }
 

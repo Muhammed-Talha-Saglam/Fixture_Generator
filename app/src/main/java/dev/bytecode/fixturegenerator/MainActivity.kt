@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.ui.ExperimentalComposeUiApi
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModel
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModelFactory
 import dev.bytecode.fixturegenerator.ui.theme.FixtureGeneratorTheme
@@ -18,6 +20,8 @@ class MainActivity : ComponentActivity() {
         DatabaseViewModelFactory((application as BaseApplication).repository)
     }
 
+    @ExperimentalComposeUiApi
+    @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

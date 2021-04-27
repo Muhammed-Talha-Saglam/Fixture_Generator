@@ -1,9 +1,6 @@
 package dev.bytecode.fixturegenerator.modals.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import dev.bytecode.fixturegenerator.modals.Fixture
 import dev.bytecode.fixturegenerator.modals.Team
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +16,9 @@ interface FixtureDao {
 
     @Insert
     suspend fun insertTeam(team: Team)
+
+    @Delete
+    suspend fun deleteTeam(team: Team)
 
     @Query("SELECT * FROM team")
     fun getTeams(): Flow<List<Team>>

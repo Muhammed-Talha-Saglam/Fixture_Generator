@@ -14,6 +14,15 @@ class FixtureRepository(private val fixtureDao: FixtureDao) {
         fixtureDao.clearFixture()
     }
 
+
+    suspend fun addTeam(team: Team) {
+        fixtureDao.insertTeam(team)
+    }
+
+    suspend fun deleteTeam(team: Team) {
+        fixtureDao.deleteTeam(team)
+    }
+
     suspend fun clearTeams() {
         fixtureDao.clearTeams()
     }
@@ -26,13 +35,5 @@ class FixtureRepository(private val fixtureDao: FixtureDao) {
 
     val fixtures = fixtureDao.getFixture()
 
-//    suspend fun getFixture(): List<Fixture> {
-//        return fixtureDao.getFixture()
-//    }
 
-
-
-    suspend fun addTeam(team: Team) {
-        fixtureDao.insertTeam(team)
-    }
 }

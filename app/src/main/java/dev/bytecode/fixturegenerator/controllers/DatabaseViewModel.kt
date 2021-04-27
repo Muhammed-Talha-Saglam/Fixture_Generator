@@ -34,6 +34,12 @@ class DatabaseViewModel(private val repository: FixtureRepository): ViewModel() 
         }
     }
 
+    fun deleteTeam(team: Team) {
+        viewModelScope.launch {
+            repository.deleteTeam(team)
+        }
+    }
+
     fun deleteAllTeams() {
         viewModelScope.launch {
             repository.clearTeams()
