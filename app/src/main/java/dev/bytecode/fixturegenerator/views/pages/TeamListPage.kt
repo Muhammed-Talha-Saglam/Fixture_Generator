@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +50,6 @@ fun TeamListPage(viewModel: DatabaseViewModel, navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colors.secondary)
-            .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
             .padding(horizontal = 10.dp, vertical = 25.dp)
 
     ) {
@@ -73,38 +74,46 @@ fun TeamListPage(viewModel: DatabaseViewModel, navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        LazyColumn {
 
-        teams.value?.forEach {
-            ListItem(
-                text = { Text(text = it.name, color = Color.White ) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = null,
-                        tint = Color.Magenta
+            teams.value?.let { teams ->
+                items(teams) { it ->
+                    ListItem(
+                        text = { Text(text = it.name, color = Color.White ) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.ArrowForward,
+                                contentDescription = null,
+                                tint = Color.Magenta
+                            )
+                        },
+                        trailing = {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null,
+                                tint = Color.Red,
+                                modifier = Modifier.clickable {
+                                    viewModel.deleteTeam(it)
+                                }
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .border(
+                                color = Color.Yellow,
+                                width = 3.dp,
+                                shape = RoundedCornerShape(10.dp)
+                            )
                     )
-                },
-                trailing = {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        tint = Color.Red,
-                        modifier = Modifier.clickable {
-                            viewModel.deleteTeam(it)
-                        }
-                    )
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .border(
-                        color = MaterialTheme.colors.primaryVariant,
-                        width = 3.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-            )
 
+                }
+
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(100.dp))
+            }
         }
-
 
     }
 
@@ -142,7 +151,6 @@ fun MakeAddTeamField(viewModel: DatabaseViewModel) {
                 imeAction = ImeAction.Done,
             ),
             keyboardActions = KeyboardActions(onDone = {
-                input.value = ""
                 keyboardController?.hide()
 
             }),
@@ -160,6 +168,8 @@ fun MakeAddTeamField(viewModel: DatabaseViewModel) {
                     input.value.isNotBlank()
                 ) {
                     viewModel.addNewTeam(Team(name = input.value))
+                    input.value = ""
+
                 }
             },
             modifier = Modifier.background(

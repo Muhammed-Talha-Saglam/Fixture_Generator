@@ -66,7 +66,7 @@ fun MakeBottomNavBar(
             Box(
                 modifier = Modifier
                     .background(
-                        color = if (isSelected) Color.White else Color.Transparent,
+                        color = if (isSelected) Color.Yellow else Color.Transparent,
                         shape = CircleShape
                     )
                     .clickable(
