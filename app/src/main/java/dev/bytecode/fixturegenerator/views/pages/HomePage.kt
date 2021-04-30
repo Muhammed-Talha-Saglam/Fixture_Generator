@@ -1,11 +1,8 @@
 package dev.bytecode.fixturegenerator.views.pages
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,7 +35,7 @@ fun HomePage(viewModel: DatabaseViewModel) {
     ) {
 
         NavHost(navController = navController, startDestination = "Teams") {
-            composable("Teams") { TeamListPage(viewModel = viewModel, navController = navController ) }
+            composable("Teams") { TeamListPage(viewModel = viewModel) }
             composable("Fixture") { FixturePage(viewModel) }
 
         }

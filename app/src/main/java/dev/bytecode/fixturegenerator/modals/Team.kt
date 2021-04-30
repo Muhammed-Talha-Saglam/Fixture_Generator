@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "team")
 data class Team(
+
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    val name: String)
+    val name: String,
+
+    )

@@ -1,6 +1,7 @@
 package dev.bytecode.fixturegenerator.modals.database
 
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import dev.bytecode.fixturegenerator.modals.Fixture
 import dev.bytecode.fixturegenerator.modals.Team
 import kotlinx.coroutines.flow.Flow
@@ -8,8 +9,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FixtureDao {
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun insertFixture(fixture: Fixture)
+
+    @Update(onConflict = REPLACE)
+    suspend fun updateFixture(fixture: Fixture)
 
     @Query("SELECT * FROM fixture")
     fun getFixture(): Flow<List<Fixture>>
@@ -31,7 +35,7 @@ interface FixtureDao {
 
 
     @Transaction
-    suspend fun updateFixture(fixtures: List<Fixture>) {
+    suspend fun updateAllFixtures(fixtures: List<Fixture>) {
         clearFixture()
 
         fixtures.forEach {

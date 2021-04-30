@@ -52,6 +52,20 @@ class DatabaseViewModel(private val repository: FixtureRepository): ViewModel() 
         }
     }
 
+    fun insertNewFixture(fixture: Fixture) {
+
+        viewModelScope.launch {
+            repository.insertNewFixture(fixture)
+        }
+    }
+
+    fun updateFixture(fixture: Fixture) {
+
+        viewModelScope.launch {
+            repository.updateFixture(fixture)
+        }
+    }
+
     fun generateNewFixture() {
 
         viewModelScope.launch {

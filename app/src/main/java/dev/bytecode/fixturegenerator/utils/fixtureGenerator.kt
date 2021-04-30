@@ -41,11 +41,11 @@ fun generateFixture(teamsGiven: List<Team>) : MutableList<Fixture> {
             if (home.name != "Temp" && away.name != "Temp") {
 
                 weeklyGame.add(
-                    Match(home.name, away.name)
+                    Match(home= home.name, away= away.name)
                 )
 
                 weeklySecondHalf.add(
-                    Match(away.name, home.name)
+                    Match( home = away.name, away = home.name)
                 )
             }
             j++
@@ -75,7 +75,7 @@ fun generateFixture(teamsGiven: List<Team>) : MutableList<Fixture> {
 
     totalList.forEach {
         val fixture = Fixture()
-        fixture.matches?.addAll(it)
+        fixture.matches.addAll(it)
 
         fixtures.add(fixture)
     }
