@@ -15,18 +15,6 @@ class DatabaseViewModel(private val repository: FixtureRepository): ViewModel() 
 
     var teams: LiveData<List<Team>> = repository.teamList.asLiveData()
 
-//    init {
-//        getFixture()
-//    }
-//
-//    fun getFixture() {
-//        viewModelScope.launch {
-//            _fixtures = MutableLiveData(repository.getFixture())
-//        }
-//    }
-
-
-
 
     fun addNewTeam(team: Team) {
         viewModelScope.launch {
@@ -34,9 +22,16 @@ class DatabaseViewModel(private val repository: FixtureRepository): ViewModel() 
         }
     }
 
+
     fun deleteTeam(team: Team) {
         viewModelScope.launch {
             repository.deleteTeam(team)
+        }
+    }
+
+    fun updateTeam(team: Team) {
+        viewModelScope.launch {
+            repository.updateTeam(team)
         }
     }
 

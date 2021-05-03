@@ -25,6 +25,11 @@ class FixtureRepository(private val fixtureDao: FixtureDao) {
         fixtureDao.insertTeam(team)
     }
 
+    suspend fun updateTeam(team: Team) {
+        Log.d("updateTeam", "${team.id} ${team.played} + ${team.win} + ${team.loss} +")
+        fixtureDao.updateTeam(team)
+    }
+
     suspend fun deleteTeam(team: Team) {
         fixtureDao.deleteTeam(team)
     }

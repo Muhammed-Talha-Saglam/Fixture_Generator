@@ -21,6 +21,9 @@ interface FixtureDao {
     @Insert
     suspend fun insertTeam(team: Team)
 
+    @Update(onConflict = REPLACE)
+    suspend fun updateTeam(team: Team)
+
     @Delete
     suspend fun deleteTeam(team: Team)
 

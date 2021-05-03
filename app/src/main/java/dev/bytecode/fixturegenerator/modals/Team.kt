@@ -10,5 +10,9 @@ data class Team(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     val name: String,
+    var played: Int = 0,
+    var win: Int =0,
+    var loss: Int =0,
+    var draw: Int = 0
 
     )

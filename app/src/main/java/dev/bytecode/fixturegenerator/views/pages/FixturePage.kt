@@ -1,12 +1,13 @@
 package dev.bytecode.fixturegenerator.views.pages
 
+
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -22,7 +23,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModel
@@ -34,54 +34,50 @@ import dev.bytecode.fixturegenerator.modals.Fixture
 fun FixturePage(viewModel: DatabaseViewModel) {
 
     val state = viewModel.fixtures.observeAsState()
+
     val fixtures = remember { state }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.primary),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.height(25.dp))
-
-        Button(
-            onClick = { viewModel.generateNewFixture() },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.secondary,
-                contentColor = Color.Yellow
-                )
-        ) {
-            Text(text = "New Fixture")
-        }
-
-        Spacer(modifier = Modifier.height(25.dp))
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-
-            fixtures.value?.let { fixtures ->
-
-                itemsIndexed(fixtures) { index, fixture ->
-
-                    MakeFixturesListItem(index, fixtures.size, fixture, viewModel)
-
-
+                Button(
+                    onClick = { viewModel.generateNewFixture() },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        contentColor = Color.Yellow
+                    )
+                ) {
+                    Text(text = "New Fixture")
                 }
             }
+        },
+        backgroundColor = MaterialTheme.colors.primary
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
 
+            val size = fixtures.value?.size
 
-            item {
-                Spacer(modifier = Modifier.height(100.dp))
+            fixtures.value?.forEachIndexed { index, fixture ->
+                MakeFixturesListItem(index, size!!, fixture, viewModel)
+
             }
 
-        }
+            Spacer(modifier = Modifier.height(100.dp))
 
+        }
     }
+
 
 }
 
@@ -95,6 +91,8 @@ fun MakeFixturesListItem(
     viewModel: DatabaseViewModel
 ) {
 
+    val teams = viewModel.teams.value
+
     val week = index % (fixtureSize / 2) + 1
     val half = if (index < (fixtureSize / 2)) "First" else "Second"
 
@@ -102,7 +100,7 @@ fun MakeFixturesListItem(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.Yellow)
-            .padding(horizontal = 5.dp),
+            .padding(horizontal = 5.dp, vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -121,7 +119,6 @@ fun MakeFixturesListItem(
 
         fixture.matches.forEach { match ->
 
-            Log.d("bugFix", match.toString())
 
             Row(
                 modifier = Modifier
@@ -144,13 +141,14 @@ fun MakeFixturesListItem(
 
                     )
                 }
+
                 Text(
                     text = "${match.home}",
-                    modifier = Modifier.fillMaxWidth(0.25f),
-                    textAlign = TextAlign.Right,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = Color.Black
 
                 )
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -182,13 +180,74 @@ fun MakeFixturesListItem(
                         )
                     )
 
+                    IconButton(
+                        onClick = {
 
-                    Text(
-                        text = "-",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Red,
-                        modifier = Modifier.padding(horizontal = 5.dp)
-                    )
+                            val hScore = homeScore.value.toIntOrNull()
+                            val aScore = awayScore.value.toIntOrNull()
+
+                            fixture.matches.find {
+                                it.home == match.home
+                            }.also {
+                                it?.let {
+                                    it.homeScore = hScore
+                                    it.awayScore = aScore
+                                }
+                            }
+
+                            val homeTeam = teams?.find { team ->
+                                team.name == match.home
+                            }
+
+                            val awayTeam = teams?.find { team ->
+                                team.name == match.away
+                            }
+
+
+                            if (hScore != null && aScore != null) {
+
+                                Log.d("fffff", "$hScore  -  $aScore")
+
+                                homeTeam!!.played += 1
+                                awayTeam!!.played += 1
+                                Log.d("fffff", homeTeam?.played.toString())
+                                Log.d("fffff", awayTeam?.played.toString())
+
+                                when {
+                                    hScore > aScore -> {
+                                        Log.d("when", "inside when")
+
+
+                                        homeTeam!!.win += 1
+                                        awayTeam!!.loss += 1
+
+                                        Log.d("when", "${homeTeam?.win} - ${awayTeam?.loss}")
+                                    }
+                                    hScore < aScore -> {
+                                        awayTeam!!.win += 1
+                                        homeTeam!!.loss += 1
+                                    }
+                                    else -> {
+                                        homeTeam!!.draw += 1
+                                        awayTeam!!.draw += 1
+                                        Log.d("when else", "${homeTeam?.draw} - ${awayTeam?.draw}")
+
+                                    }
+                                }
+                            }
+
+                            homeTeam?.let { viewModel.updateTeam(it) }
+                            awayTeam?.let { viewModel.updateTeam(it) }
+
+                            viewModel.updateFixture(fixture)
+
+                        }) {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            contentDescription = "Check",
+                            tint = MaterialTheme.colors.primary
+                        )
+                    }
 
                     TextField(
                         value = if (awayScore.value == "null") "" else awayScore.value,
@@ -219,35 +278,12 @@ fun MakeFixturesListItem(
 
                 Text(
                     text = "${match.away}",
-                    modifier = Modifier.fillMaxWidth(0.25f),
-                    textAlign = TextAlign.Left,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = Color.Black
+
                 )
-
-                IconButton(onClick = {
-
-                    fixture.matches.find {
-                        it.home == match.home
-                    }.also {
-                        it?.let {
-                            it.homeScore = homeScore.value.toIntOrNull()
-                            it.awayScore = awayScore.value.toIntOrNull()
-                        }
-                    }
-
-
-                    viewModel.updateFixture(fixture)
-
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = "Check",
-                        tint = MaterialTheme.colors.primary
-                    )
-                }
-
-
             }
+
         }
 
 

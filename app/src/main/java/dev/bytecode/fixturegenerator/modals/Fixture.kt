@@ -1,6 +1,5 @@
 package dev.bytecode.fixturegenerator.modals
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

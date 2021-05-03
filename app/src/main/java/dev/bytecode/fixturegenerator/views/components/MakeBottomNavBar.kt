@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,11 +56,12 @@ fun MakeBottomNavBar(
 
             val logo = when(screen.route) {
                 "Teams" -> Icons.Default.List
-                else -> Icons.Default.Home
+                "Fixture" -> Icons.Default.Home
+                else -> Icons.Default.Menu
 
             }
 
-            var isSelected = currentRoute == screen.route
+            val isSelected = currentRoute == screen.route
 
 
 

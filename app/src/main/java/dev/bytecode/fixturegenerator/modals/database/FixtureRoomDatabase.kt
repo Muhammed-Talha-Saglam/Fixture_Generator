@@ -10,7 +10,7 @@ import dev.bytecode.fixturegenerator.modals.Match
 import dev.bytecode.fixturegenerator.modals.Team
 import dev.bytecode.fixturegenerator.modals.database.converters.Converters
 
-@Database(entities = [Fixture::class, Team::class, Match::class], version = 5, exportSchema = false)
+@Database(entities = [Fixture::class, Team::class, Match::class], version = 6, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FixtureRoomDatabase: RoomDatabase() {
 

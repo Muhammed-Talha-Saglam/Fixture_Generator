@@ -13,11 +13,13 @@ import dev.bytecode.fixturegenerator.views.components.MakeBottomNavBar
 sealed class Page(val route: String) {
     object Teams : Page("Teams")
     object Fixture : Page("Fixture")
+    object Table : Page("Table")
 }
 
 val pages = listOf(
     Page.Teams,
-    Page.Fixture
+    Page.Fixture,
+    Page.Table
 )
 
 @ExperimentalMaterialApi
@@ -37,6 +39,7 @@ fun HomePage(viewModel: DatabaseViewModel) {
         NavHost(navController = navController, startDestination = "Teams") {
             composable("Teams") { TeamListPage(viewModel = viewModel) }
             composable("Fixture") { FixturePage(viewModel) }
+            composable("Table") { TablePage(viewModel) }
 
         }
 
