@@ -68,6 +68,23 @@ class DatabaseViewModel(private val repository: FixtureRepository): ViewModel() 
                 val newFixture = generateFixture(it)
                 repository.updateDatabase(newFixture)
 
+
+            }
+        }
+
+    }
+
+    fun refreshTable() {
+
+        viewModelScope.launch {
+            teams.value?.forEach { team ->
+                team.played = 0
+                team.draw = 0
+                team.loss = 0
+                team.win = 0
+
+                updateTeam(team)
+
             }
         }
 

@@ -59,7 +59,7 @@ fun TablePage(viewModel: DatabaseViewModel) {
             ) {
                 Text(text = "${index + 1}. ${team.name} ")
                 Row {
-                    Text(text = "${(team.win * 3)} ", Modifier.size(18.dp), textAlign = TextAlign.Right)
+                    Text(text = "${(team.win * 3) + team.draw } ", Modifier.size(18.dp), textAlign = TextAlign.Right)
                     Text(text = "${team.played} ", Modifier.size(18.dp), textAlign = TextAlign.Right)
                     Text(text = "${team.win} ", Modifier.size(18.dp), textAlign = TextAlign.Right)
                     Text(text = "${team.draw} ", Modifier.size(18.dp), textAlign = TextAlign.Right)

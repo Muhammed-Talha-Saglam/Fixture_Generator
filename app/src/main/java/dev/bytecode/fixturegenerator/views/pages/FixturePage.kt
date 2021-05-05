@@ -47,7 +47,10 @@ fun FixturePage(viewModel: DatabaseViewModel) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { viewModel.generateNewFixture() },
+                    onClick = {
+                        viewModel.generateNewFixture()
+                        viewModel.refreshTable()
+                    },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.secondary,
                         contentColor = Color.Yellow
