@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -55,9 +56,9 @@ fun MakeBottomNavBar(
         pages.forEach { screen ->
 
             val logo = when(screen.route) {
-                "Teams" -> Icons.Default.List
-                "Fixture" -> Icons.Default.Home
-                else -> Icons.Default.Menu
+                "Teams" -> "Teams"
+                "Fixture" -> "Fixture"
+                else -> "Table"
 
             }
 
@@ -88,16 +89,12 @@ fun MakeBottomNavBar(
                     ),
 
                 ) {
-                Icon(
+                Text(
                     logo,
-                    contentDescription = "logo",
                     modifier = Modifier
                         .padding(5.dp)
-                        .size(30.dp)
                         .align(Alignment.Center),
-
-                    tint = if (isSelected) Color.Black else Color.White
-                )
+                    )
             }
 
         }

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModel
 import dev.bytecode.fixturegenerator.modals.Fixture
+import dev.bytecode.fixturegenerator.modals.Team
 
 
 @ExperimentalComposeUiApi
@@ -36,6 +37,9 @@ fun FixturePage(viewModel: DatabaseViewModel) {
     val state = viewModel.fixtures.observeAsState()
 
     val fixtures = remember { state }
+
+    val teams = viewModel.teams.value
+
 
     Scaffold(
         topBar = {
@@ -72,7 +76,7 @@ fun FixturePage(viewModel: DatabaseViewModel) {
             val size = fixtures.value?.size
 
             fixtures.value?.forEachIndexed { index, fixture ->
-                MakeFixturesListItem(index, size!!, fixture, viewModel)
+                MakeFixturesListItem(index, size!!, fixture, viewModel, teams)
 
             }
 
@@ -91,10 +95,10 @@ fun MakeFixturesListItem(
     index: Int,
     fixtureSize: Int,
     fixture: Fixture,
-    viewModel: DatabaseViewModel
+    viewModel: DatabaseViewModel,
+    teams: List<Team>?
 ) {
 
-    val teams = viewModel.teams.value
 
     val week = index % (fixtureSize / 2) + 1
     val half = if (index < (fixtureSize / 2)) "First" else "Second"
@@ -152,6 +156,9 @@ fun MakeFixturesListItem(
 
                 )
 
+                val isPlayed = remember {
+                    mutableStateOf(match.isPlayed)
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -180,77 +187,93 @@ fun MakeFixturesListItem(
                             backgroundColor = Color.White,
                             textColor = Color.Black
 
-                        )
+                        ),
+                        enabled = !isPlayed.value
                     )
 
-                    IconButton(
-                        onClick = {
 
-                            val hScore = homeScore.value.toIntOrNull()
-                            val aScore = awayScore.value.toIntOrNull()
+                    if (isPlayed.value) {
+                        Text(
+                            text = "-",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(5.dp)
+                            )
+                    } else {
+                        IconButton(
+                            onClick = {
 
-                            fixture.matches.find {
-                                it.home == match.home
-                            }.also {
-                                it?.let {
-                                    it.homeScore = hScore
-                                    it.awayScore = aScore
-                                }
-                            }
+                                val hScore = homeScore.value.toIntOrNull()
+                                val aScore = awayScore.value.toIntOrNull()
 
-                            val homeTeam = teams?.find { team ->
-                                team.name == match.home
-                            }
-
-                            val awayTeam = teams?.find { team ->
-                                team.name == match.away
-                            }
-
-
-                            if (hScore != null && aScore != null) {
-
-                                Log.d("fffff", "$hScore  -  $aScore")
-
-                                homeTeam!!.played += 1
-                                awayTeam!!.played += 1
-                                Log.d("fffff", homeTeam?.played.toString())
-                                Log.d("fffff", awayTeam?.played.toString())
-
-                                when {
-                                    hScore > aScore -> {
-                                        Log.d("when", "inside when")
-
-
-                                        homeTeam!!.win += 1
-                                        awayTeam!!.loss += 1
-
-                                        Log.d("when", "${homeTeam?.win} - ${awayTeam?.loss}")
-                                    }
-                                    hScore < aScore -> {
-                                        awayTeam!!.win += 1
-                                        homeTeam!!.loss += 1
-                                    }
-                                    else -> {
-                                        homeTeam!!.draw += 1
-                                        awayTeam!!.draw += 1
-                                        Log.d("when else", "${homeTeam?.draw} - ${awayTeam?.draw}")
-
+                                fixture.matches.find {
+                                    it.home == match.home
+                                }.also {
+                                    it?.let {
+                                        it.homeScore = hScore
+                                        it.awayScore = aScore
+                                        it.isPlayed = true
                                     }
                                 }
-                            }
 
-                            homeTeam?.let { viewModel.updateTeam(it) }
-                            awayTeam?.let { viewModel.updateTeam(it) }
+                                val homeTeam = teams?.find { team ->
+                                    team.name == match.home
+                                }
 
-                            viewModel.updateFixture(fixture)
+                                val awayTeam = teams?.find { team ->
+                                    team.name == match.away
+                                }
 
-                        }) {
-                        Icon(
-                            imageVector = Icons.Filled.CheckCircle,
-                            contentDescription = "Check",
-                            tint = MaterialTheme.colors.primary
-                        )
+
+                                if (hScore != null && aScore != null) {
+
+                                    Log.d("fffff", "$hScore  -  $aScore")
+
+                                    homeTeam!!.played += 1
+                                    awayTeam!!.played += 1
+                                    Log.d("fffff", homeTeam?.played.toString())
+                                    Log.d("fffff", awayTeam?.played.toString())
+
+                                    when {
+                                        hScore > aScore -> {
+                                            Log.d("when", "inside when")
+
+
+                                            homeTeam!!.win += 1
+                                            awayTeam!!.loss += 1
+
+                                            Log.d("when", "${homeTeam?.win} - ${awayTeam?.loss}")
+                                        }
+                                        hScore < aScore -> {
+                                            awayTeam!!.win += 1
+                                            homeTeam!!.loss += 1
+                                        }
+                                        else -> {
+                                            homeTeam!!.draw += 1
+                                            awayTeam!!.draw += 1
+                                            Log.d("when else", "${homeTeam?.draw} - ${awayTeam?.draw}")
+
+                                        }
+                                    }
+                                }
+
+                                homeTeam?.let { viewModel.updateTeam(it) }
+                                awayTeam?.let { viewModel.updateTeam(it) }
+
+
+                                viewModel.updateFixture(fixture)
+                                isPlayed.value = true
+
+                            }) {
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = "Check",
+                                tint = MaterialTheme.colors.primary
+                            )
+                        }
                     }
+
+
 
                     TextField(
                         value = if (awayScore.value == "null") "" else awayScore.value,
@@ -273,7 +296,9 @@ fun MakeFixturesListItem(
                             unfocusedIndicatorColor = Color.Transparent,
                             backgroundColor = Color.White,
                             textColor = Color.Black
-                        )
+                        ),
+                        enabled = !isPlayed.value
+
                     )
 
 

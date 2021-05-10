@@ -48,11 +48,10 @@ fun TablePage(viewModel: DatabaseViewModel) {
                 Text(text = "L ", color = Color.Red, fontWeight = FontWeight.Bold,fontSize = 18.sp)
             }
         }
+
         Divider()
 
-        teams.value?.sortedByDescending {
-            it.win
-        }?.forEachIndexed { index, team ->
+        teams.value?.sortedDescending()?.forEachIndexed { index, team ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -67,7 +66,21 @@ fun TablePage(viewModel: DatabaseViewModel) {
                 }
             }
             Divider()
+
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Column {
+            Text(text = "P: points", fontSize = 10.sp)
+            Text(text = "M: matches played", fontSize = 10.sp)
+            Text(text = "W: win", fontSize = 10.sp)
+            Text(text = "D: drawal", fontSize = 10.sp)
+            Text(text = "L: loss", fontSize = 10.sp)
+
+        }
+
+        Spacer(modifier = Modifier.height(100.dp))
     }
 
 }

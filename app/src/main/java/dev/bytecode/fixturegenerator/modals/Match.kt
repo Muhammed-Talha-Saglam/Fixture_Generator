@@ -19,6 +19,8 @@ data class Match  (
 
     var awayScore: Int? = null,
 
+    var isPlayed: Boolean = false
+
     ) {
 
     override fun equals(other: Any?): Boolean {

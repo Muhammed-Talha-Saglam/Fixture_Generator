@@ -15,4 +15,17 @@ data class Team(
     var loss: Int =0,
     var draw: Int = 0
 
-    )
+    ) : Comparable<Team> {
+    override fun compareTo(other: Team): Int {
+
+        if ((this.win*3 + this.draw) > (other.win*3 + other.draw )) {
+            return 1
+        } else if ((this.win*3 + this.draw) < (other.win*3 + other.draw )) {
+            return -1
+        } else {
+            return 0
+        }
+
+    }
+
+}
