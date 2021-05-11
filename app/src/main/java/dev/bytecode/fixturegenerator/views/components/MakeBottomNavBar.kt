@@ -55,7 +55,7 @@ fun MakeBottomNavBar(
     ) {
         pages.forEach { screen ->
 
-            val logo = when(screen.route) {
+            val logo = when (screen.route) {
                 "Teams" -> "Teams"
                 "Fixture" -> "Fixture"
                 else -> "Table"
@@ -77,9 +77,9 @@ fun MakeBottomNavBar(
 
                             if (currentRoute != screen.route) {
 
-                                navController.navigate(screen.route ) {
-
-
+                                navController.navigate(screen.route) {
+                                    launchSingleTop = true
+                                    popUpTo = navController.graph.startDestination
 
                                 }
 
@@ -94,7 +94,7 @@ fun MakeBottomNavBar(
                     modifier = Modifier
                         .padding(5.dp)
                         .align(Alignment.Center),
-                    )
+                )
             }
 
         }

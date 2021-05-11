@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,21 +66,31 @@ fun TeamListPage(viewModel: DatabaseViewModel) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        LazyColumn {
 
-            teams.value?.let { teams ->
-                items(teams) { team ->
-                    MakeTeamListItem(team, viewModel)
-                }
-            }
+        MakeTeamList(teams, viewModel)
 
-            item {
-                Spacer(modifier = Modifier.height(100.dp))
-            }
-        }
+
 
     }
 
+}
+
+
+@ExperimentalMaterialApi
+@Composable
+fun MakeTeamList(teams: State<List<Team>?>, viewModel: DatabaseViewModel) {
+    LazyColumn {
+
+        teams.value?.let { teams ->
+            items(teams) { team ->
+                MakeTeamListItem(team, viewModel)
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(100.dp))
+        }
+    }
 }
 
 @ExperimentalComposeUiApi

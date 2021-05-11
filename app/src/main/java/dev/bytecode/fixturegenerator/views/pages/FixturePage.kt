@@ -23,8 +23,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.navigate
 import dev.bytecode.fixturegenerator.controllers.DatabaseViewModel
 import dev.bytecode.fixturegenerator.modals.Fixture
 import dev.bytecode.fixturegenerator.modals.Team
@@ -32,38 +35,15 @@ import dev.bytecode.fixturegenerator.modals.Team
 
 @ExperimentalComposeUiApi
 @Composable
-fun FixturePage(viewModel: DatabaseViewModel) {
+fun FixturePage(viewModel: DatabaseViewModel, navController: NavHostController) {
 
     val state = viewModel.fixtures.observeAsState()
-
     val fixtures = remember { state }
-
     val teams = viewModel.teams.value
 
 
     Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = {
-                        viewModel.generateNewFixture()
-                        viewModel.refreshTable()
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.secondary,
-                        contentColor = Color.Yellow
-                    )
-                ) {
-                    Text(text = "New Fixture")
-                }
-            }
-        },
+        topBar = { MakeNewFixtureButton(viewModel, navController) },
         backgroundColor = MaterialTheme.colors.primary
     ) {
         Column(
@@ -85,9 +65,34 @@ fun FixturePage(viewModel: DatabaseViewModel) {
         }
     }
 
-
 }
 
+
+@Composable
+fun MakeNewFixtureButton(viewModel: DatabaseViewModel, navController: NavHostController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Button(
+            onClick = {
+                viewModel.generateNewFixture()
+                viewModel.refreshTable()
+                navController.navigate("Teams")
+
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.secondary,
+                contentColor = Color.Yellow
+            )
+        ) {
+            Text(text = "New Fixture")
+        }
+    }
+}
 
 @ExperimentalComposeUiApi
 @Composable
@@ -107,7 +112,7 @@ fun MakeFixturesListItem(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.Yellow)
-            .padding(horizontal = 5.dp, vertical = 10.dp),
+            .padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -125,43 +130,37 @@ fun MakeFixturesListItem(
         )
 
         fixture.matches.forEach { match ->
+            val homeScore = remember {
+                mutableStateOf(
+                    match.homeScore.toString()
+                )
+            }
 
+            val awayScore = remember {
+                mutableStateOf(
+                    match.awayScore.toString()
 
+                )
+            }
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-
+                modifier = Modifier.fillMaxSize().padding(vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
             ) {
-
-                val homeScore = remember {
-                    mutableStateOf(
-                        match.homeScore.toString()
-                    )
-                }
-
-                val awayScore = remember {
-                    mutableStateOf(
-                        match.awayScore.toString()
-
-                    )
-                }
 
                 Text(
                     text = "${match.home}",
                     fontSize = 12.sp,
-                    color = Color.Black
+                    color = Color.Black,
+                    textAlign =TextAlign.Right,
+                    modifier = Modifier.padding(end = 10.dp).weight(1f)
 
                 )
 
-                val isPlayed = remember {
-                    mutableStateOf(match.isPlayed)
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+
+                    val isPlayed = remember {
+                        mutableStateOf(match.isPlayed)
+                    }
 
                     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -198,13 +197,15 @@ fun MakeFixturesListItem(
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(5.dp)
-                            )
+                        )
                     } else {
                         IconButton(
                             onClick = {
 
+
                                 val hScore = homeScore.value.toIntOrNull()
                                 val aScore = awayScore.value.toIntOrNull()
+
 
                                 fixture.matches.find {
                                     it.home == match.home
@@ -251,18 +252,24 @@ fun MakeFixturesListItem(
                                         else -> {
                                             homeTeam!!.draw += 1
                                             awayTeam!!.draw += 1
-                                            Log.d("when else", "${homeTeam?.draw} - ${awayTeam?.draw}")
+                                            Log.d(
+                                                "when else",
+                                                "${homeTeam?.draw} - ${awayTeam?.draw}"
+                                            )
 
                                         }
                                     }
+                                    homeTeam?.let { viewModel.updateTeam(it) }
+                                    awayTeam?.let { viewModel.updateTeam(it) }
+
+
+                                    viewModel.updateFixture(fixture)
+                                    isPlayed.value = true
+                                    keyboardController?.hide()
+
                                 }
 
-                                homeTeam?.let { viewModel.updateTeam(it) }
-                                awayTeam?.let { viewModel.updateTeam(it) }
 
-
-                                viewModel.updateFixture(fixture)
-                                isPlayed.value = true
 
                             }) {
                             Icon(
@@ -302,15 +309,23 @@ fun MakeFixturesListItem(
                     )
 
 
-                }
 
                 Text(
                     text = "${match.away}",
                     fontSize = 12.sp,
-                    color = Color.Black
-
+                    color = Color.Black,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(start =  10.dp).weight(1f)
                 )
+
             }
+
+
+
+
+
+
+
 
         }
 

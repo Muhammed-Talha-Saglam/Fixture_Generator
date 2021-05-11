@@ -38,7 +38,7 @@ fun HomePage(viewModel: DatabaseViewModel) {
 
         NavHost(navController = navController, startDestination = "Teams") {
             composable("Teams") { TeamListPage(viewModel = viewModel) }
-            composable("Fixture") { FixturePage(viewModel) }
+            composable("Fixture") { FixturePage(viewModel, navController) }
             composable("Table") { TablePage(viewModel) }
 
         }
