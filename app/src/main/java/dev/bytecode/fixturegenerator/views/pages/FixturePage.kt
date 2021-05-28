@@ -4,6 +4,8 @@ package dev.bytecode.fixturegenerator.views.pages
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,7 +34,6 @@ import dev.bytecode.fixturegenerator.controllers.DatabaseViewModel
 import dev.bytecode.fixturegenerator.modals.Fixture
 import dev.bytecode.fixturegenerator.modals.Team
 
-
 @ExperimentalComposeUiApi
 @Composable
 fun FixturePage(viewModel: DatabaseViewModel, navController: NavHostController) {
@@ -40,27 +41,30 @@ fun FixturePage(viewModel: DatabaseViewModel, navController: NavHostController) 
     val state = viewModel.fixtures.observeAsState()
     val fixtures = remember { state }
     val teams = viewModel.teams.value
+    val size = fixtures.value?.size
 
 
     Scaffold(
         topBar = { MakeNewFixtureButton(viewModel, navController) },
         backgroundColor = MaterialTheme.colors.primary
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+        LazyColumn(
+            modifier = Modifier,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
 
-            val size = fixtures.value?.size
 
-            fixtures.value?.forEachIndexed { index, fixture ->
-                MakeFixturesListItem(index, size!!, fixture, viewModel, teams)
+            fixtures.value?.let {
+                itemsIndexed(fixtures.value!!) { index, fixture ->
+                    MakeFixturesListItem(index, size!!, fixture, viewModel, teams)
 
+                }
             }
 
-            Spacer(modifier = Modifier.height(100.dp))
+
+            item {
+                Spacer(modifier = Modifier.height(100.dp))
+            }
 
         }
     }
