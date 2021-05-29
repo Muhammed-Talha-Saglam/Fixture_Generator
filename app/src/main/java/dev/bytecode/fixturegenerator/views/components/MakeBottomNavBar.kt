@@ -18,9 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.KEY_ROUTE
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.navigate
 import dev.bytecode.fixturegenerator.views.pages.Page
 import kotlin.math.roundToInt
 
@@ -34,7 +32,7 @@ fun MakeBottomNavBar(
 
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+    val currentRoute = navBackStackEntry?.destination?.route
 
 
     Row(
@@ -77,18 +75,17 @@ fun MakeBottomNavBar(
                     .clickable(
                         onClick = {
 
-                            if (currentRoute != screen.route) {
 
-                                navController.navigate(screen.route) {
-                                    launchSingleTop = true
-                                    popUpTo(navController.graph.startDestination) {
 
-                                    }
-
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.startDestinationRoute!!) {
+                                    saveState = true
                                 }
-
+                                launchSingleTop = true
+                                restoreState = true
 
                             }
+
 
                         },
                     ),
